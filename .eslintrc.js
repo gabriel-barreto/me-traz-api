@@ -1,13 +1,14 @@
 module.exports = {
-  parser: '@typesscript-eslint/parser',
+  parser: '@typescript-eslint/parser',
   env: {
     es6: true,
+    jest: true,
     node: true
   },
   extends: [
     'standard',
-    'prettier/@typescript-eslint',
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
+    'prettier/@typescript-eslint'
   ],
   globals: {
     Atomics: 'readonly',
@@ -32,12 +33,12 @@ module.exports = {
     'import/extensions': [
       'error',
       'ignorePackages',
-      { js: 'never', ts: 'never', tsx: 'never' }
+      { js: 'never', ts: 'never' }
     ],
     'import/prefer-default-export': 'off',
     'import/no-extraneous-dependencies': [
       'warn',
-      { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/*.stories.js'] }
+      { devDependencies: ['**/*.spec.ts', 'gulpfile.js'] }
     ],
     'prettier/prettier': 'error'
   }

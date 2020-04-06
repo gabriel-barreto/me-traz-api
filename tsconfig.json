@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@": ["./*"],
+      "@config": ["./Configs/index.ts"],
+      "@controllers": ["./Controllers/index.ts"],
+      "@functions": ["./Functions/index.ts"],
+      "@models": ["./Models/index.ts"],
+      "@router": ["./Router/index.ts"],
+      "@utils": ["./Utils/index.ts"]
+    },
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["node"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}

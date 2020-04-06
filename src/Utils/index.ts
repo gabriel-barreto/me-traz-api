@@ -1,1 +1,1 @@
-export { default as Response } from './Response.utils'
+export { default as $response } from './Response.utils'

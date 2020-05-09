@@ -1,4 +1,5 @@
 import Mongoose, { Document, Schema } from 'mongoose'
+import { number } from 'yup'
 
 interface OrderItemAdditionalType {
   item: Schema.Types.ObjectId
@@ -54,21 +55,24 @@ const DeliveryOrderSchema = new Schema(
   { _id: false }
 )
 
+const AdditionalSchema = new Schema({
+  item: { type: Schema.Types.ObjectId, ref: 'Additional', required: true },
+  qtt: { type: Number, required: true, default: 1 }
+})
+
+const ItemOrderSchema = new Schema({
+  additionals: { type: [AdditionalSchema], required: false, default: [] },
+  ingredients: { type: [String], required: false, default: [] },
+  item: { type: Schema.Types.ObjectId, required: true, ref: 'Product' },
+  qtt: { type: number, required: true, default: 1 }
+})
+
 const OrderSchema = new Schema(
   {
     delivery: DeliveryOrderSchema,
     user: UserOrderSchema,
     payment: OrderPaymentSchema,
-    items: {
-      type: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: 'Product'
-        }
-      ],
-      required: true,
-      minlength: 1
-    }
+    items: { type: [ItemOrderSchema], required: true, minlength: 1 }
   },
   { timestamps: true }
 )

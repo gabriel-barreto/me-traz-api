@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  mongo-express:
+    container_name: 'me-traz-mongo-express'
+    image: mongo-express
+    ports:
+      - 27016:8081
+    environment:
+      - ME_CONFIG_BASICAUTH_USERNAME=docker
+      - ME_CONFIG_BASICAUTH_PASSWORD=devdocker
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_EDITORTHEME=dracula
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=devdocker
+    links:
+      - mongo
+    networks:
+      - mongo-compose-network
+
+  mongo:
+    container_name: 'me-traz-mongodb'
+    image: mongo
+    restart: always
+    ports:
+      - 27018:27017
+    expose:
+      - 27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=devdocker
+      - MONGO_DATA-DIR=/data/db
+    volumes:
+      - /data/me-traz-db:/data/db:z
+    networks:
+      - mongo-compose-network
+    command: mongod --serviceExecutor adaptive
+
+networks:
+  mongo-compose-network:
+    driver: bridge

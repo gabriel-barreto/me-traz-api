@@ -11,7 +11,7 @@ import CEP from './cep.functions'
 import WhatsApp from './whatsapp.functions'
 import { debug } from 'console'
 
-async function _populate(context: Record<string, string>): Promise<string> {
+async function _populate(context: Record<string, any>): Promise<string> {
   const asyncReadFile = promisify(readFile)
 
   const templatePath = resolve(__dirname, '..', 'Templates', 'new-order.txt')
@@ -81,6 +81,22 @@ function payment(payment: OrderPaymentType): string {
   }`
 }
 
+function total(items: OrderItem[]): string {
+  function reduceAdditional(additional: AdditionalType[]) {
+    return additional.reduce((acc, { price }) => acc + price, 0)
+  }
+
+  const total = items.reduce((acc, { additional, item, qtt }) => {
+    const additionalTotal = reduceAdditional(additional || [])
+    return qtt * item.price + additionalTotal + acc
+  }, 0)
+
+  return total
+    .toFixed(2)
+    .toString()
+    .replace('.', ',')
+}
+
 interface OrderTypePopulated extends OrderType {
   items: OrderItem[]
 }
@@ -95,7 +111,8 @@ async function build({ order, userAgent }: BuildFnParams): Promise<string> {
     delivery: await delivery(order.delivery),
     items: await items(order.items),
     payment: await payment(order.payment),
-    user: { ...order.toObject().user }
+    user: { ...order.toObject().user },
+    total: total(order.items)
   }
 
   const content = await _populate(context)

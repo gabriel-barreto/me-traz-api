@@ -1,9 +1,16 @@
 import { Request, Response } from 'express'
 import * as Yup from 'yup'
 
+import { OrderMessage } from '@functions'
 import { Order } from '@models'
 import { $response } from '@utils'
 
+const addressField = (
+  type: Yup.StringSchema | Yup.NumberSchema = Yup.string()
+) =>
+  type.when('deliveryType', (ref: string, schema: Yup.StringSchema) =>
+    ref === 'delivery' ? schema.required() : schema
+  )
 const schema = Yup.object().shape({
   name: Yup.string().required(),
   email: Yup.string()
@@ -11,11 +18,15 @@ const schema = Yup.object().shape({
     .required(),
   whatsapp: Yup.string().required(),
   deliveryType: Yup.string().oneOf(['withdraw', 'delivery']),
-  cep: Yup.string().required(),
-  number: Yup.number().required(),
-  complement: Yup.string().required(),
-  paymentType: Yup.string().required(),
-  paymentChange: Yup.number().required(),
+  cep: addressField(),
+  number: addressField(Yup.number()),
+  complement: Yup.string(),
+  paymentType: addressField(),
+  paymentChange: Yup.number().when(
+    '$paymentType',
+    (ref: string, schema: Yup.StringSchema) =>
+      ref === 'Dinheiro' ? schema.required() : schema
+  ),
   items: Yup.array().of(
     Yup.object().shape({
       additional: Yup.array().of(
@@ -34,7 +45,7 @@ const schema = Yup.object().shape({
 async function create(req: Request, res: Response) {
   const { body } = req
 
-  const isSchemaValid = await schema.validate(body)
+  const isSchemaValid = await schema.isValid(body)
   if (!isSchemaValid) {
     return $response.badRequest(res, {
       error: 'Validation fails. Invalid payload'
@@ -59,9 +70,14 @@ async function create(req: Request, res: Response) {
     },
     items: body.items
   }
-  const created = await Order.create(payload)
+  const { _id } = await Order.create(payload)
+  const order = await Order.findOne({ _id }).populate('items.item')
 
-  return $response.created(res, created)
+  const whatsAppMessage = await OrderMessage.build({
+    order,
+    phone: '5511991456204'
+  })
+  return $response.created(res, { callback: whatsAppMessage })
 }
 
 export default { create }

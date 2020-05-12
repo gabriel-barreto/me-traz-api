@@ -32,6 +32,7 @@ export interface ProductType extends Document {
 
 const productSchema = new Schema(
   {
+    active: { type: Boolean, required: false, default: true },
     title: { type: String, required: true },
     tags: { type: [String], required: false, default: [] },
     description: { type: String, required: true },

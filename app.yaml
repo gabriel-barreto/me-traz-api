@@ -1,0 +1,6 @@
+runtime: nodejs10
+
+env_variables:
+  PORT: 5000
+  MONGO_URI: mongodb://api:C2x29fXnz6JyAAhf@ds263018.mlab.com:63018/me-traz-demo
+  WHATSAPP: 5511991456204

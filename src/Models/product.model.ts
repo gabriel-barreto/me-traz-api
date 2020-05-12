@@ -1,24 +1,9 @@
 import Mongoose, { Schema, Document } from 'mongoose'
 
-interface ProductType extends Document {
-  title: string
-  tag: Array<string>
-  description: string
-  ingredients: Array<Record<string, any>>
-  additional: Array<Record<string, any>>
-  photo: Record<string, string>
-  price: number
-  createdAt: Date
-  updateAt: Date
+const additionalSchema = {
+  type: Schema.Types.ObjectId,
+  ref: 'Additional'
 }
-
-const additionalSchema = new Schema(
-  {
-    label: { type: String, required: true },
-    price: { type: Number, required: true }
-  },
-  { _id: false }
-)
 
 const ingredientsSchema = new Schema(
   {
@@ -27,6 +12,23 @@ const ingredientsSchema = new Schema(
   },
   { _id: false }
 )
+
+interface IngredientsType {
+  label: string
+  required: boolean
+}
+
+export interface ProductType extends Document {
+  title: string
+  tag: Array<string>
+  description: string
+  ingredients: Array<IngredientsType>
+  additional: Array<string>
+  photo: Record<string, string>
+  price: number
+  createdAt: Date
+  updateAt: Date
+}
 
 const productSchema = new Schema(
   {

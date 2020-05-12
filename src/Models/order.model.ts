@@ -1,5 +1,4 @@
 import Mongoose, { Document, Schema } from 'mongoose'
-import { number } from 'yup'
 
 interface OrderItemAdditionalType {
   item: Schema.Types.ObjectId
@@ -13,7 +12,7 @@ interface OrderItemType {
   qtt: number
 }
 
-interface OrderType extends Document {
+export interface OrderType extends Document {
   delivery: {
     type: string
     cep?: string
@@ -25,7 +24,10 @@ interface OrderType extends Document {
     email: string
     whatsapp: string
   }
-  items: Array<OrderItemType>
+  payment: {
+    type: string
+    change?: string
+  }
 }
 
 const OrderPaymentSchema = new Schema(
@@ -60,12 +62,15 @@ const AdditionalSchema = new Schema({
   qtt: { type: Number, required: true, default: 1 }
 })
 
-const ItemOrderSchema = new Schema({
-  additionals: { type: [AdditionalSchema], required: false, default: [] },
-  ingredients: { type: [String], required: false, default: [] },
-  item: { type: Schema.Types.ObjectId, required: true, ref: 'Product' },
-  qtt: { type: number, required: true, default: 1 }
-})
+const ItemOrderSchema = new Schema(
+  {
+    additionals: { type: [AdditionalSchema], required: false, default: [] },
+    ingredients: { type: [String], required: false, default: [] },
+    item: { type: Schema.Types.ObjectId, required: true, ref: 'Product' },
+    qtt: { type: Number, required: true, default: 1 }
+  },
+  { _id: false }
+)
 
 const OrderSchema = new Schema(
   {
@@ -77,6 +82,9 @@ const OrderSchema = new Schema(
   { timestamps: true }
 )
 
-const model = Mongoose.model<OrderType>('Order', OrderSchema, 'orders')
+interface OrderModelType extends OrderType {
+  items: Array<OrderItemType>
+}
+const model = Mongoose.model<OrderModelType>('Order', OrderSchema, 'orders')
 
 export default model

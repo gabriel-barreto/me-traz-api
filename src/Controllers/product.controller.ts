@@ -1,7 +1,7 @@
 import { Response, Request } from 'express'
 import * as Yup from 'yup'
 
-import { Product } from '@models'
+import { Product, Order } from '@models'
 import { $response } from '@utils'
 
 const list = async (_req: Request, res: Response): Promise<Response> => {
@@ -104,6 +104,14 @@ const remove = async (req: Request, res: Response): Promise<Response> => {
   if (!found) {
     return $response.notFound(res, {
       error: 'Not found any product with provided ID'
+    })
+  }
+
+  const hasOrders = await Order.find({ 'items.item': _id }, '')
+  if (hasOrders) {
+    return $response.badRequest(res, {
+      error:
+        "You can't delete a product which has orders registered. Try disable them."
     })
   }
 

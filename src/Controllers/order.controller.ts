@@ -21,9 +21,9 @@ const schema = Yup.object().shape({
   cep: addressField(),
   number: addressField(Yup.number()),
   complement: Yup.string(),
-  paymentType: addressField(),
+  paymentMethod: addressField(),
   paymentChange: Yup.number().when(
-    '$paymentType',
+    'paymentMethod',
     (ref: string, schema: Yup.StringSchema) =>
       ref === 'Dinheiro' ? schema.required() : schema
   ),
@@ -61,8 +61,8 @@ async function create(req: Request, res: Response) {
       complement: body.complement
     },
     payment: {
-      type: body.paymentType,
-      change: body.paymentChange
+      change: body.paymentChange,
+      method: body.paymentMethod
     },
     user: {
       name: body.name,

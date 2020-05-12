@@ -25,15 +25,15 @@ export interface OrderType extends Document {
     whatsapp: string
   }
   payment: {
-    type: string
     change?: string
+    method: string
   }
 }
 
 const OrderPaymentSchema = new Schema(
   {
-    type: { type: String, required: true },
-    change: { type: Number, required: false }
+    change: { type: Number, required: false },
+    method: { type: String, required: true }
   },
   { _id: false }
 )

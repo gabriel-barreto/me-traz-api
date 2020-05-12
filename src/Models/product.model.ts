@@ -5,10 +5,16 @@ const additionalSchema = {
   ref: 'Additional'
 }
 
-const ingredientsSchema = new Schema(
+const ingredientsSchema = new Schema({
+  label: { type: String, required: true },
+  required: { type: Boolean, required: false, default: (): boolean => false }
+})
+
+const photoSchema = new Schema(
   {
-    label: { type: String, required: true },
-    required: { type: Boolean, required: false, default: (): boolean => false }
+    originalname: { type: String, required: true },
+    url: { type: String, required: true, default: '' },
+    key: { type: String, required: true }
   },
   { _id: false }
 )
@@ -19,6 +25,7 @@ interface IngredientsType {
 }
 
 export interface ProductType extends Document {
+  active: boolean
   title: string
   tag: Array<string>
   description: string
@@ -40,9 +47,9 @@ const productSchema = new Schema(
     additional: { type: [additionalSchema], required: false, default: [] },
     price: { type: Number, required: true },
     photo: {
-      originalname: { type: String, required: true },
-      url: { type: String, required: true },
-      key: { type: String, required: true }
+      type: photoSchema,
+      default: { url: '' },
+      required: false
     }
   },
   { timestamps: true }

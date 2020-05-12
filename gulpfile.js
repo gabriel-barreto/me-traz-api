@@ -17,14 +17,9 @@ function buildTs(cb) {
   cb()
 }
 
-function copyTemplatesHtml(cb) {
-  src('src/Templates/html/*.*').pipe(copy('dist', { prefix: 1 }))
+function copyTemplates(cb) {
+  src('src/Templates/**/*.*').pipe(copy('dist', { prefix: 1 }))
   cb()
 }
 
-function copyTemplatesTxt(cb) {
-  src('src/Templates/text/*.*').pipe(copy('dist', { prefix: 1 }))
-  cb()
-}
-
-exports.default = series(clean, buildTs, copyTemplatesTxt, copyTemplatesHtml)
+exports.default = series(clean, buildTs, copyTemplates)

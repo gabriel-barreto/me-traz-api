@@ -1,0 +1,12 @@
+Olá, gostaria de fazer um pedido:
+{{ items }}
+  *Total: R$ {{ total }}*
+
+{{ delivery }}
+
+*Pagamento: {{ payment }}*
+
+_Qualquer problema, pode entrar em contato comigo em:_
+  *Nome:* {{ user.name }}
+  *WhatsApp:* {{ user.whatsapp }}
+  *E-mail:* {{ user.email }}

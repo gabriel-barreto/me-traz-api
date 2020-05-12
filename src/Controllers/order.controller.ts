@@ -39,7 +39,8 @@ const schema = Yup.object().shape({
       item: Yup.string().required(),
       qtt: Yup.number().required()
     })
-  )
+  ),
+  userAgent: Yup.string().required()
 })
 
 async function create(req: Request, res: Response) {
@@ -73,11 +74,9 @@ async function create(req: Request, res: Response) {
   const { _id } = await Order.create(payload)
   const order = await Order.findOne({ _id }).populate('items.item')
 
-  const whatsAppMessage = await OrderMessage.build({
-    order,
-    phone: '5511991456204'
-  })
-  return $response.created(res, { callback: whatsAppMessage })
+  const { userAgent } = body
+  const whatsAppLink = await OrderMessage.build({ order, userAgent })
+  return $response.created(res, { callback: whatsAppLink })
 }
 
 export default { create }

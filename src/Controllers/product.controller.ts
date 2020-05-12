@@ -5,7 +5,7 @@ import { Product } from '@models'
 import { $response } from '@utils'
 
 const list = async (_req: Request, res: Response): Promise<Response> => {
-  const found = await Product.find({})
+  const found = await Product.find({ active: true })
   if (!found || found.length < 1) {
     return $response.notFound(res, { error: 'Not found any product' })
   }

@@ -8,6 +8,8 @@ import { OrderType } from '@/Models/order.model'
 import { ProductType } from '@/Models/product.model'
 
 import CEP from './cep.functions'
+import WhatsApp from './whatsapp.functions'
+import { debug } from 'console'
 
 async function _populate(context: Record<string, string>): Promise<string> {
   const asyncReadFile = promisify(readFile)
@@ -83,24 +85,21 @@ interface OrderTypePopulated extends OrderType {
   items: OrderItem[]
 }
 interface BuildFnParams {
-  phone: string
-  order: OrderTypePopulated | Record<string, any>
+  order: any
+  userAgent: string
 }
-async function build({ order, phone }: BuildFnParams): Promise<string> {
+async function build({ order, userAgent }: BuildFnParams): Promise<string> {
   if (!order) return ''
 
   const context = {
     delivery: await delivery(order.delivery),
     items: await items(order.items),
     payment: await payment(order.payment),
-    user: { ...order.user }
+    user: { ...order.toObject().user }
   }
 
-  const messageContent = await _populate(context)
-  console.log(messageContent)
-  return encodeURI(
-    `https://web.whatsapp.com/send?phone=${phone}&text=${messageContent}`
-  )
+  const content = await _populate(context)
+  return WhatsApp.buildLinkToChat({ content, userAgent })
 }
 
 export default { build }

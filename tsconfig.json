@@ -3,7 +3,7 @@
     "outDir": "dist",
     "baseUrl": "./src",
     "paths": {
-      "@": ["./*"],
+      "@/*": ["./*"],
       "@config": ["./Configs/index.ts"],
       "@controllers": ["./Controllers/index.ts"],
       "@functions": ["./Functions/index.ts"],

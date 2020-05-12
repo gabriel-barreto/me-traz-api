@@ -4,7 +4,7 @@
   "main": "dist/server.js",
   "license": "MIT",
   "scripts": {
-    "build": "yarn gulp default",
+    "build": "gulp default",
     "dev": "nodemon src/server.ts",
     "up": "node -r ts-node/register -r tsconfig-paths/register dist/server.js",
     "start": "npm run build && npm run up",

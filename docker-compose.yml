@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  mongo-express:
+  me-traz-mongo-express:
     container_name: 'me-traz-mongo-express'
     image: mongo-express
     ports:
@@ -14,11 +14,11 @@ services:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=root
       - ME_CONFIG_MONGODB_ADMINPASSWORD=devdocker
     links:
-      - mongo
+      - me-traz-mongo
     networks:
       - mongo-compose-network
 
-  mongo:
+  me-traz-mongo:
     container_name: 'me-traz-mongodb'
     image: mongo
     restart: always

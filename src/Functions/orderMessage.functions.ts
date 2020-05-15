@@ -10,6 +10,13 @@ import { ProductType } from '@/Models/product.model'
 import CEP from './cep.functions'
 import WhatsApp from './whatsapp.functions'
 
+function _formatPrice(rawPrice: string | number): string {
+  return parseInt(`${rawPrice}`)
+    .toFixed()
+    .toString()
+    .replace('.', ',')
+}
+
 async function _populate(context: Record<string, any>): Promise<string> {
   const asyncReadFile = promisify(readFile)
 
@@ -50,13 +57,13 @@ async function items(items: OrderItem[]): Promise<string> {
   }
   function mountAddiotinal(additional: AdditionalType[]): string {
     return additional
-      .map(({ label, price }) => `   + ${label} ${price}`)
+      .map(({ label, price }) => `   + ${label} ${_formatPrice(price)}`)
       .join('\n')
   }
 
   return items
     .map(({ additional, ingredients, item, qtt }) => {
-      let itemEntry = `  ${qtt}x ${item.title} R$ ${item.price}`
+      let itemEntry = `  ${qtt}x ${item.title} R$ ${_formatPrice(item.price)}`
       if (ingredients) {
         const ingredientsEntry = mountIngredients(ingredients)
         itemEntry = `${itemEntry}\n${ingredientsEntry}`

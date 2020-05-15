@@ -11,8 +11,8 @@ import CEP from './cep.functions'
 import WhatsApp from './whatsapp.functions'
 
 function _formatPrice(rawPrice: string | number): string {
-  return parseInt(`${rawPrice}`)
-    .toFixed()
+  return parseFloat(`${rawPrice}`)
+    .toFixed(2)
     .toString()
     .replace('.', ',')
 }

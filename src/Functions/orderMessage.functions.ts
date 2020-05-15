@@ -9,7 +9,6 @@ import { ProductType } from '@/Models/product.model'
 
 import CEP from './cep.functions'
 import WhatsApp from './whatsapp.functions'
-import { debug } from 'console'
 
 async function _populate(context: Record<string, any>): Promise<string> {
   const asyncReadFile = promisify(readFile)
@@ -72,17 +71,17 @@ async function items(items: OrderItem[]): Promise<string> {
 }
 
 interface OrderPaymentType {
-  type: string
+  method: string
   change?: string
 }
 function payment(payment: OrderPaymentType): string {
-  return `${payment.type}${
+  return `${payment.method}${
     payment.change ? `, troco para ${payment.change}` : ''
   }`
 }
 
 function total(items: OrderItem[]): string {
-  function reduceAdditional(additional: AdditionalType[]) {
+  function reduceAdditional(additional: AdditionalType[]): number {
     return additional.reduce((acc, { price }) => acc + price, 0)
   }
 
